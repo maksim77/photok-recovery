@@ -1,0 +1,33 @@
+name: Go
+
+on:
+  create:
+    tags:
+      - v*
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+
+    - name: Set up Go
+      uses: actions/setup-go@v4
+      with:
+        go-version: '1.23'
+
+    - name: Build
+      run: |
+        go build .
+        go get github.com/mitchellh/gox
+        /home/runner/go/bin/gox -osarch="linux/amd64 linux/arm darwin/amd64 windows/amd64" --output "build/{{ .Dir }}_{{.OS}}_{{.Arch}}"
+      
+    - name: Release
+      uses: softprops/action-gh-release@v2
+      with:
+        files: |
+            build/photok-recovery_darwin_amd64
+            build/photok-recovery_windows_amd64.exe
+            build/photok-recovery_linux_amd64
+            build/photok-recovery_linux_arm
