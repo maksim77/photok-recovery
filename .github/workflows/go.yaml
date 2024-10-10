@@ -20,7 +20,7 @@ jobs:
     - name: Build
       run: |
         go build .
-        go get github.com/mitchellh/gox
+        go install github.com/mitchellh/gox@latest
         /home/runner/go/bin/gox -osarch="linux/amd64 linux/arm darwin/amd64 windows/amd64" --output "build/{{ .Dir }}_{{.OS}}_{{.Arch}}"
       
     - name: Release
